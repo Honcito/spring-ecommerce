@@ -25,5 +25,13 @@ public class Orden {
     private double total;
 
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
+
+    @OneToOne(mappedBy = "orden", orphanRemoval = true)
+    private DetalleOrden detalleOrden;
+
 }
 

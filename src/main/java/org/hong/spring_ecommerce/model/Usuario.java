@@ -9,6 +9,11 @@ import lombok.*;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -40,4 +45,13 @@ public class Usuario {
 
     @Column(name = "telefono")
     private String telefono;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true)
+    private List<Orden> ordenes = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "usuario", orphanRemoval = true)
+    private List<Producto> productos = new ArrayList<>();
+
 }

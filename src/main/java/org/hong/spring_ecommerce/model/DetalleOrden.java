@@ -14,10 +14,22 @@ public class DetalleOrden {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_detalle_orden")
     private Long id;
     private String nombre;
     private double cantidad;
     private double precio;
     private double total;
+
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_producto")
+    private Producto producto;
+
+    @ToString.Exclude
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "id_orden")
+    private Orden orden;
 
 }
