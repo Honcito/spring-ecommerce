@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,8 +31,8 @@ public class Orden {
     private Usuario usuario;
 
 
-    @OneToOne(mappedBy = "orden", orphanRemoval = true)
-    private DetalleOrden detalleOrden;
+    @OneToMany(mappedBy = "orden")
+    private List<DetalleOrden> detalle;
 
 }
 

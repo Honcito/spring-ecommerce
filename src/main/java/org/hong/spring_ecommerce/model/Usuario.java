@@ -1,25 +1,19 @@
 package org.hong.spring_ecommerce.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -46,12 +40,36 @@ public class Usuario {
     @Column(name = "telefono")
     private String telefono;
 
-    @ToString.Exclude
+    @Column(name = "tipo")
+    private String tipo;
+
+    @Column(name = "password")
+    private String password;
+
     @OneToMany(mappedBy = "usuario", orphanRemoval = true)
     private List<Orden> ordenes = new ArrayList<>();
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "usuario", orphanRemoval = true)
     private List<Producto> productos = new ArrayList<>();
 
+    public Usuario(Long id, String nombre, String username, String email, String direccion, String telefono, String tipo, String password) {
+        this.id = id;
+        this.nombre = nombre;
+        this.username = username;
+        this.email = email;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.tipo = tipo;
+        this.password = password;
+    }
+
+    public Usuario(String nombre, String username, String email, String direccion, String telefono, String tipo, String password) {
+        this.nombre = nombre;
+        this.username = username;
+        this.email = email;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.tipo = tipo;
+        this.password = password;
+    }
 }

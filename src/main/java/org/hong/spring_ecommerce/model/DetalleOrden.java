@@ -28,7 +28,7 @@ public class DetalleOrden {
     private Producto producto;
 
     @ToString.Exclude
-    @OneToOne(orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "id_orden")
     private Orden orden;
 

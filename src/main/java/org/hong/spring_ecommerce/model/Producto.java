@@ -39,4 +39,13 @@ public class Producto {
     @OneToMany(mappedBy = "producto", orphanRemoval = true)
     private List<DetalleOrden> detallesOrden = new ArrayList<>();
 
+    public Producto(Long id, String nombre, String descripcion, String imagen, double precio, int cantidad, Usuario usuario) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
+        this.precio = precio;
+        this.cantidad = cantidad;
+        this.usuario = usuario;
+    }
 }

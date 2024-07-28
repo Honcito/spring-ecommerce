@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-
-    <meta charset="utf-8">
+<head th:fragment="head">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -22,7 +21,7 @@
 <body>
 
 <!-- Navigation -->
-<div th:include="administrador/template_admin.html :: header"></div>
+<div th:replace="~{administrador/template_admin.html :: header}"></div>
 
 <!-- Page Content -->
 <div class="container">
@@ -90,7 +89,7 @@
 <!-- /.container -->
 
 <!-- Footer -->
-<div th:include="administrador/template_admin.html :: footer"></div>
+<div th:replace="~{administrador/template_admin.html :: footer}"></div>
 
 <!-- Bootstrap core JavaScript -->
 <script th:src="@{vendor/jquery/jquery.min.js}"></script>
