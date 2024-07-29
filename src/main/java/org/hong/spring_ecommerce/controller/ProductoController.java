@@ -73,8 +73,6 @@ public class ProductoController {
 
     @GetMapping("/delete/{id}")
     public String delete(@Valid @PathVariable Long id) {
-        Producto producto = new Producto();
-        Optional<Producto> optionalProducto = productoService.buscarProductoPorId(id);
         productoService.eliminarProducto(id);
 
         return "redirect:/productos";
