@@ -32,11 +32,6 @@ public class ProductoController {
     }
 
 
-//    @GetMapping("")
-//    public String show() {
-//        return "productos/show";
-//    }
-
     @GetMapping("")
     public String listar(Model model) {
         List<Producto> productos = productoService.listarProductos();
