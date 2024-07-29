@@ -34,7 +34,7 @@
 
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a th:href="@{index}">Home</a></li>
-    <li class="breadcrumb-item active">Ver Productos</li>
+    <li class="breadcrumb-item active">Actualizar Producto</li>
   </ol>
 
   <a class="btn btn-primary" th:href="@{/productos/create}" > Crear Producto</a>
@@ -56,8 +56,8 @@
         <td th:text="${producto.descripcion}"></td>
         <td th:text="${producto.cantidad}"></td>
         <td th:text="${producto.precio}"></td>
-        <td><a  class="btn btn-warning" th:href="@{productos.edit}">Editar</a> </td>
-        <td><a  class="btn btn-danger" th:href="@{productos/delete}">Eliminar</a> </td>
+        <td><a  class="btn btn-warning" th:href="@{productos/edit/{id} (id=${producto.id})}">Editar</a> </td>
+        <td><a  class="btn btn-danger" th:href="@{productos/delete/{id} (id=${producto.id})}">Eliminar</a> </td>
       </tr>       
     </tbody>
   </table>
