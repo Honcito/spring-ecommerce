@@ -5,12 +5,15 @@ import org.hong.spring_ecommerce.model.Producto;
 import org.hong.spring_ecommerce.model.Usuario;
 import org.hong.spring_ecommerce.repository.ProductoRepository;
 import org.hong.spring_ecommerce.service.ProductoServiceImpl;
+import org.hong.spring_ecommerce.service.UploadFileService;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +28,13 @@ public class ProductoController {
 
     private List<Producto> productos;
 
+    private UploadFileService upload;
+
     @Autowired
-    public ProductoController(ProductoServiceImpl productoService, List<Producto> productos) {
+    public ProductoController(ProductoServiceImpl productoService, List<Producto> productos, UploadFileService upload) {
         this.productoService = productoService;
         this.productos = productos;
+        this.upload = upload;
     }
 
 
@@ -45,10 +51,31 @@ public class ProductoController {
     }
 
     @PostMapping("/save")
-    public String save(Producto producto){
+    //El @Requestparam("img") viene de la vista create = <input type="file" class="form-control-file" id="img" name="img">
+    // "img" lo coloque en la variable MultipartFile file
+    public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
         LOGGER.info("Este es el objeto producto {}", producto);
         Usuario usuario = new Usuario(1L, "test","test","test@test.com","test","632598741","ADMIN","");
         producto.setUsuario(usuario);
+
+        //Lógica para guardar la imagen
+        if (producto.getId() == null) { // Cuando se crea un producto el id viene null
+            String nombreImagen = upload.saveImages(file);
+            //Guardar en el campo imagen de la tabla productos la imagen
+            producto.setImagen(nombreImagen);
+        } else {
+            //Cuando se modifique el producto se cargue la misma imagen que tenía
+            if (file.isEmpty()) { // Editar el producto pero no se cambia la imagen
+                Producto p = new Producto();
+                p = productoService.buscarProductoPorId(producto.getId())
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                producto.setImagen(p.getImagen());
+            } else {
+                // Si queremos cambiar la imagen al editar el producto
+                String nombreImagen = upload.saveImages(file);
+                producto.setImagen(nombreImagen);
+            }
+        }
         productoService.guardarProducto(producto);
         return "redirect:/productos";
     }
