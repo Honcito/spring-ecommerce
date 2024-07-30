@@ -50,10 +50,11 @@
                 <div class="col-lg-6">
                     <!--Ojo apunta al th al método cart del HomeController-->
                     <form th:action="@{/cart}" method="POST">
+                        <input type="hiden" th:value="${producto.id}" name="id">
                         <h2 class="card-title" th:text="${producto.nombre}"></h2>
 
                         <ul class="list-group">
-                            <li class="list-group-item"><h5 th:text=" 'Precio: ' + ${producto.precio}"></h5></li>
+                            <li class="list-group-item"><h5 th:text=" 'Precio: ' + ${producto.precio} + ' €'"></h5></li>
                             <li class="list-group-item"><p th:text=" 'Descripción: ' + ${producto.descripcion}"></p>
                             </li>
                             <li class="list-group-item"><h6>
