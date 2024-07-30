@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -35,8 +36,14 @@ public class HomeController {
 
     //Método para llevarnos del botón producto a productoHome
     @GetMapping("productohome/{id}")
-    public String productoHome(@PathVariable Long id) {
+    public String productoHome(@PathVariable Long id, Model model) {
         log.info("Id producto enviado como parámetro {}", id);
+        Producto producto = new Producto();
+        Optional<Producto> productoOptional = productoService.buscarProductoPorId(id);
+        producto = productoOptional.get();
+
+        model.addAttribute("producto", producto);
+
         return "usuario/productohome";
     }
 
