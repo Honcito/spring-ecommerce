@@ -55,15 +55,66 @@ public class HomeController {
     }
 
     @PostMapping("/cart")
-    public String addCart(@RequestParam Long id, @RequestParam Integer cantidad) {
+    public String addCart(@RequestParam Long id, @RequestParam Integer cantidad, Model model) {
         DetalleOrden detalleOrden = new DetalleOrden();
         Producto producto = new Producto();
         double sumaTotal = 0;
 
         Optional<Producto> optionalProducto = productoService.buscarProductoPorId(id);
+        //Con log en consola
         log.info("Producto añadido: {}", optionalProducto.get());
         log.info("Cantidad: {}", cantidad);
+        producto = optionalProducto.get();
 
+        detalleOrden.setCantidad(cantidad);
+        detalleOrden.setPrecio(producto.getPrecio());
+        detalleOrden.setNombre(producto.getNombre());
+        detalleOrden.setTotal(producto.getPrecio() * cantidad);
+        //Foreing key id_producto
+        detalleOrden.setProducto(producto);
+
+
+
+        detalles.add(detalleOrden);
+
+
+
+        sumaTotal = detalles.stream().mapToDouble(DetalleOrden::getTotal).sum();
+
+        orden.setTotal(sumaTotal);
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+
+
+        for(int i=0; i<detalles.size(); i++){
+            System.out.println(detalles.get(i));
+        }
+        return "usuario/carrito";
+    }
+
+    //Método para poder quitar un producto del carro de compra
+    @GetMapping("/delete/cart/{id}")
+    public String deleteProductoCart(@PathVariable Long id, Model model) {
+        //Lista nueva de productos del carrito
+        List<DetalleOrden> ordenesNueva = new ArrayList<DetalleOrden>();
+        for (DetalleOrden detalleOrden: detalles) {
+            //Búsqueda del id en la lista del carrito, y si es igual al que pasamos por parámetro
+            //se añade a la nueva lista, si no coincide no se añade
+            if (detalleOrden.getProducto().getId() != id) {
+                ordenesNueva.add(detalleOrden);
+            }
+        }
+        //Poner la nueva lista con los productos restantes
+        detalles = ordenesNueva;
+
+        //Sumatoria
+        double sumaTotal = 0;
+        sumaTotal = detalles.stream().mapToDouble(DetalleOrden::getTotal).sum();
+        orden.setTotal(sumaTotal);
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
         return "usuario/carrito";
     }
 
