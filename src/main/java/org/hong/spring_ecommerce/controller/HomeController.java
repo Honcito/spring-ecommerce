@@ -73,10 +73,14 @@ public class HomeController {
         //Foreing key id_producto
         detalleOrden.setProducto(producto);
 
+        //Validación para que no se pueda agregar un producto de nuevo y lo presente por separado
+        Long idproducto = producto.getId();
+        //Función lambda para verificar si el id que se añade al carrito ya está en la lista, es como un for que recorre la lista
+        boolean productoExistente = detalles.stream().anyMatch(p -> p.getProducto().getId() == idproducto);
 
-
-        detalles.add(detalleOrden);
-
+        if (!productoExistente) {
+            detalles.add(detalleOrden);
+        }
 
 
         sumaTotal = detalles.stream().mapToDouble(DetalleOrden::getTotal).sum();
@@ -117,5 +121,14 @@ public class HomeController {
         model.addAttribute("orden", orden);
         return "usuario/carrito";
     }
+
+    //Método para acceder al carrito desde cualquier lugar de nuestra aplicación
+    @GetMapping("/getCart")
+    public String getCart(Model model) {
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+        return "/usuario/carrito";
+    }
+
 
 }
