@@ -9,4 +9,5 @@ public interface IOrdenService {
     Orden buscarOrdenPorId(Long id);
     void eliminarOrden(Long id);
     Orden guardarOrden(Orden orden);
+   String generarNumeroOrden();
 }

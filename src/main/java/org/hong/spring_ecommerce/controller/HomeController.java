@@ -4,16 +4,20 @@ import org.hong.spring_ecommerce.model.DetalleOrden;
 import org.hong.spring_ecommerce.model.Orden;
 import org.hong.spring_ecommerce.model.Producto;
 import org.hong.spring_ecommerce.model.Usuario;
+import org.hong.spring_ecommerce.service.IDetalleOrdenService;
+import org.hong.spring_ecommerce.service.IOrdenService;
 import org.hong.spring_ecommerce.service.IUsuarioService;
 import org.hong.spring_ecommerce.service.ProductoServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +37,16 @@ public class HomeController {
 
     private IUsuarioService usuarioService;
 
+    private IOrdenService ordenService;
+
+    private IDetalleOrdenService detalleOrdenService;
+
     @Autowired
-    public HomeController(ProductoServiceImpl productoService, IUsuarioService usuarioService) {
+    public HomeController(ProductoServiceImpl productoService, IUsuarioService usuarioService, IOrdenService ordenService, IDetalleOrdenService detalleOrdenService) {
         this.productoService = productoService;
         this.usuarioService = usuarioService;
+        this.ordenService = ordenService;
+        this.detalleOrdenService = detalleOrdenService;
     }
 
     @GetMapping("")
@@ -147,6 +157,29 @@ public class HomeController {
         return "/usuario/resumenorden";
     }
 
+    // Guardar la orden
+    @GetMapping("/saveOrder")
+    public String saverOrder() {
+        Date fechaCreacion = new Date();
+        orden.setFechaCreacion(fechaCreacion);
+        orden.setNumero(ordenService.generarNumeroOrden());
+
+        // Usuario que realiza la orden
+        Usuario usuario = usuarioService.buscarUsuarioPorId(1L).get();
+        orden.setUsuario(usuario);
+
+        ordenService.guardarOrden(orden);
+
+        //Guardar detalles
+        for (DetalleOrden dt: detalles) {
+            dt.setOrden(orden);
+            detalleOrdenService.guardarDetalleOrden(dt);
+        }
+        //Limpiar lista y orden
+        orden = new Orden();
+        detalles.clear();
+        return "redirect:/";
+    }
 
 
 }

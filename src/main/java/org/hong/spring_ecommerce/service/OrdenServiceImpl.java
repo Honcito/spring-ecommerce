@@ -40,7 +40,8 @@ public class OrdenServiceImpl implements IOrdenService{
 
     //Generar un número de orden
     //00010
-    public String generarNumerOrden() {
+
+    public String generarNumeroOrden() {
         int numero = 0;
         String numeroConcatenado = "";
 
