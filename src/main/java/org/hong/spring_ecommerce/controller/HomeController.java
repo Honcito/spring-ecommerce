@@ -3,6 +3,8 @@ package org.hong.spring_ecommerce.controller;
 import org.hong.spring_ecommerce.model.DetalleOrden;
 import org.hong.spring_ecommerce.model.Orden;
 import org.hong.spring_ecommerce.model.Producto;
+import org.hong.spring_ecommerce.model.Usuario;
+import org.hong.spring_ecommerce.service.IUsuarioService;
 import org.hong.spring_ecommerce.service.ProductoServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +31,12 @@ public class HomeController {
     //Almacenar los datos de la orden
     private Orden orden = new Orden();
 
+    private IUsuarioService usuarioService;
+
     @Autowired
-    public HomeController(ProductoServiceImpl productoService) {
+    public HomeController(ProductoServiceImpl productoService, IUsuarioService usuarioService) {
         this.productoService = productoService;
+        this.usuarioService = usuarioService;
     }
 
     @GetMapping("")
@@ -129,6 +134,19 @@ public class HomeController {
         model.addAttribute("orden", orden);
         return "/usuario/carrito";
     }
+
+    @GetMapping("/order")
+    public String order(Model model) {
+        //Para probar el único usuario que tengo
+        Usuario usuario = usuarioService.buscarUsuarioPorId(1L).get();
+
+        model.addAttribute("cart", detalles);
+        model.addAttribute("orden", orden);
+        model.addAttribute("usuario", usuario);
+
+        return "/usuario/resumenorden";
+    }
+
 
 
 }
