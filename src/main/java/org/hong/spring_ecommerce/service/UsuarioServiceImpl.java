@@ -34,4 +34,9 @@ public class UsuarioServiceImpl implements IUsuarioService{
     public void eliminarUsuario(Long id) {
 
     }
+
+    @Override
+    public Usuario guardarUsuario(Usuario usuario) {
+        return usuarioRepository.save(usuario);
+    }
 }

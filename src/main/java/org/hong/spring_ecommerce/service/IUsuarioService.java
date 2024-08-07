@@ -10,4 +10,5 @@ public interface IUsuarioService {
     List<Usuario> listarUsuarios();
     Optional<Usuario> buscarUsuarioPorId(Long id);
     void eliminarUsuario(Long id);
+    Usuario guardarUsuario(Usuario usuario);
 }
