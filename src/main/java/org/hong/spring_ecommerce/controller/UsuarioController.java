@@ -68,6 +68,14 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/compras")
+    public String obtenerCompras(Model model, HttpSession session) {
+        model.addAttribute("sesion", session.getAttribute("idusuario"));
+
+
+        return "usuario/compras";
+    }
+
 }
 
 
