@@ -1,11 +1,13 @@
 package org.hong.spring_ecommerce.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.hong.spring_ecommerce.model.Producto;
 import org.hong.spring_ecommerce.model.Usuario;
 import org.hong.spring_ecommerce.repository.ProductoRepository;
 import org.hong.spring_ecommerce.service.ProductoServiceImpl;
 import org.hong.spring_ecommerce.service.UploadFileService;
+import org.hong.spring_ecommerce.service.IUsuarioService;
 import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,12 +31,16 @@ public class ProductoController {
     private List<Producto> productos;
 
     private UploadFileService upload;
+    
+    private IUsuarioService usuarioService;
+
 
     @Autowired
-    public ProductoController(ProductoServiceImpl productoService, List<Producto> productos, UploadFileService upload) {
+    public ProductoController(ProductoServiceImpl productoService, List<Producto> productos, UploadFileService upload, IUsuarioService usuarioService) {
         this.productoService = productoService;
         this.productos = productos;
         this.upload = upload;
+        this.usuarioService = usuarioService;
     }
 
 
@@ -53,11 +59,12 @@ public class ProductoController {
     @PostMapping("/save")
     //El @Requestparam("img") viene de la vista create = <input type="file" class="form-control-file" id="img" name="img">
     // "img" lo coloque en la variable MultipartFile file
-    public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+    public String save(Producto producto, @RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
         LOGGER.info("Este es el objeto producto {}", producto);
-        Usuario usuario = new Usuario(1L, "test","test","test@test.com","test","632598741","ADMIN","");
+//        Usuario usuario = new Usuario(1L, "test","test","test@test.com","test","632598741","ADMIN","");
+        Usuario usuario = usuarioService.buscarUsuarioPorId(Long.parseLong(session.getAttribute("idusuario").toString())).get();
         producto.setUsuario(usuario);
-
+        
         //Lógica para guardar la imagen
         if (producto.getId() == null) { // Cuando se crea un producto el id viene null
             String nombreImagen = upload.saveImages(file);

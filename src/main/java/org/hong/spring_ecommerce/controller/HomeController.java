@@ -1,5 +1,6 @@
 package org.hong.spring_ecommerce.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.hong.spring_ecommerce.model.DetalleOrden;
 import org.hong.spring_ecommerce.model.Orden;
 import org.hong.spring_ecommerce.model.Producto;
@@ -51,7 +52,9 @@ public class HomeController {
     }
 
     @GetMapping("")
-    public String home(Model model) {
+    public String home(Model model, HttpSession session) {
+        //Obtener el id del usuario logueado
+        log.info("Sesión del usuario: {}", session.getAttribute("idusuario"));
         List<Producto> productos = productoService.listarProductos();
         model.addAttribute("productos", productos);
         return "usuario/home";
@@ -147,9 +150,11 @@ public class HomeController {
     }
 
     @GetMapping("/order")
-    public String order(Model model) {
+    public String order(Model model, HttpSession session) {
         //Para probar el único usuario que tengo
-        Usuario usuario = usuarioService.buscarUsuarioPorId(1L).get();
+//        Usuario usuario = usuarioService.buscarUsuarioPorId(1L).get();
+        //Obtenemos el id del usuario con HttpSession
+        Usuario usuario = usuarioService.buscarUsuarioPorId(Long.parseLong(session.getAttribute("idusuario").toString())).get();
 
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
@@ -160,15 +165,15 @@ public class HomeController {
 
     // Guardar la orden
     @GetMapping("/saveOrder")
-    public String saverOrder() {
+    public String saverOrder(HttpSession session) {
         Date fechaCreacion = new Date();
         orden.setFechaCreacion(fechaCreacion);
         orden.setNumero(ordenService.generarNumeroOrden());
 
         // Usuario que realiza la orden
-        Usuario usuario = usuarioService.buscarUsuarioPorId(1L).get();
-        orden.setUsuario(usuario);
+        Usuario usuario = usuarioService.buscarUsuarioPorId(Long.parseLong(session.getAttribute("idusuario").toString())).get();
 
+        orden.setUsuario(usuario);
         ordenService.guardarOrden(orden);
 
         //Guardar detalles
