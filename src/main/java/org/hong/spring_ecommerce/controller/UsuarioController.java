@@ -1,7 +1,9 @@
 package org.hong.spring_ecommerce.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.hong.spring_ecommerce.model.Orden;
 import org.hong.spring_ecommerce.model.Usuario;
+import org.hong.spring_ecommerce.service.IOrdenService;
 import org.hong.spring_ecommerce.service.UsuarioServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,10 +23,12 @@ public class UsuarioController {
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioController.class);
     private UsuarioServiceImpl usuarioService;
+    private IOrdenService ordenService;
 
     @Autowired
-    public UsuarioController(UsuarioServiceImpl usuarioService) {
+    public UsuarioController(UsuarioServiceImpl usuarioService, IOrdenService ordenService) {
         this.usuarioService = usuarioService;
+        this.ordenService = ordenService;
     }
 
     @GetMapping("/registro")
@@ -72,7 +76,9 @@ public class UsuarioController {
     public String obtenerCompras(Model model, HttpSession session) {
         model.addAttribute("sesion", session.getAttribute("idusuario"));
 
-
+        Usuario usuario = usuarioService.buscarUsuarioPorId(Long.parseLong(session.getAttribute("idusuario").toString())).get();
+        List<Orden> ordenes = ordenService.findByUsuario(usuario);
+        model.addAttribute("ordenes", ordenes);
         return "usuario/compras";
     }
 
