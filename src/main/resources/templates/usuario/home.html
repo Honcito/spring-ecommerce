@@ -22,7 +22,13 @@
 <body>
 
   <!-- Navigation -->
-  <div th:insert="~{usuario/template_usuario.html::header}"></div>
+  <!--header cuando el usuario no está logueado. Un if con unless-->
+  <!-- Si la sesion es null... -->
+  <div th:insert="~{usuario/template_usuario.html::header}" th:if="${sesion==null}"></div>
+
+  <!--header cuando el usuario está logueado-->
+  <!-- Y si NO... -->
+  <div th:insert="~{usuario/template_usuario.html::header-user}" th:unless="${sesion==null}"></div>
 
     <!-- Page Content -->
     <div class="container">
